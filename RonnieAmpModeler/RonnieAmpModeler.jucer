@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="UYdnzM" name="NewProject" projectType="guiapp" useAppConfig="0"
+<JUCERPROJECT id="VHPSpc" name="RonnieAmpModeler" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
-  <MAINGROUP id="EdwIOI" name="NewProject">
-    <GROUP id="{55B7C968-7B5C-3E75-607D-1F6FBD65BFDB}" name="Source">
-      <FILE id="x72P9Z" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
-      <FILE id="jMVOuS" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-      <FILE id="PKp5Aq" name="MainComponent.cpp" compile="1" resource="0"
+  <MAINGROUP id="evADjx" name="RonnieAmpModeler">
+    <GROUP id="{46CDE286-B1C9-A91E-093F-3662E41425A2}" name="Source">
+      <FILE id="n6OR6i" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="hTNpAn" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="R70nZm" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
   </MAINGROUP>
@@ -27,8 +27,8 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="NewProject"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="NewProject"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="RonnieAmpModeler"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="RonnieAmpModeler"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>

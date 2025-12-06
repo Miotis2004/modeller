@@ -10,11 +10,11 @@
 #include "MainComponent.h"
 
 //==============================================================================
-class NewProjectApplication  : public juce::JUCEApplication
+class RonnieAmpModelerApplication  : public juce::JUCEApplication
 {
 public:
     //==============================================================================
-    NewProjectApplication() {}
+    RonnieAmpModelerApplication() {}
 
     const juce::String getApplicationName() override       { return ProjectInfo::projectName; }
     const juce::String getApplicationVersion() override    { return ProjectInfo::versionString; }
@@ -65,7 +65,7 @@ public:
                               DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar (true);
-            setContentOwned (new MainComponent(), true);
+            setContentOwned (new AmpModelerComponent(), true);
 
            #if JUCE_IOS || JUCE_ANDROID
             setFullScreen (true);
@@ -102,4 +102,4 @@ private:
 
 //==============================================================================
 // This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION (NewProjectApplication)
+START_JUCE_APPLICATION (RonnieAmpModelerApplication)
