@@ -1,10 +1,10 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "AmpModelerEngine.h"
+#include "RonnieAudioProcessor.h"
+#include "UI/MainLayout.h"
 
 //==============================================================================
-// This is the main UI + audio component for your app.
 class AmpModelerComponent : public juce::AudioAppComponent
 {
 public:
@@ -21,12 +21,15 @@ public:
     void resized() override;
 
 private:
-    // === DSP engine ===
-    AmpModelerEngine engine;
+    // We own the processor here for standalone app
+    ronnie::RonnieAudioProcessor processor;
 
-    // === UI controls ===
-    juce::Slider inputGainSlider;
-    juce::Label  inputGainLabel;
+    // The main UI
+    ronnie::MainLayout mainLayout;
+
+    // Settings Button
+    juce::TextButton settingsButton;
+    void openSettings();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AmpModelerComponent)
 };
