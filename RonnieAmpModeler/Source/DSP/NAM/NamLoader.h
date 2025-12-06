@@ -18,8 +18,15 @@ namespace nam
     public:
         virtual ~DSP() = default;
         virtual void process(float* input, float* output, const int numFrames) = 0;
-        virtual void set_loudness(const double loudness) {};
-        virtual void set_input_level(const double level) {};
+        virtual void set_loudness(const double loudness)
+        {
+            juce::ignoreUnused(loudness);
+        };
+
+        virtual void set_input_level(const double level)
+        {
+            juce::ignoreUnused(level);
+        };
     };
 
     // A placeholder Model that implements a non-linear saturation curve

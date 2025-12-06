@@ -9,9 +9,9 @@ namespace ronnie
 class SimpleGate
 {
 public:
-    void prepare(double sampleRate)
+    void prepare(double newSampleRate)
     {
-        this->sampleRate = sampleRate;
+        this->sampleRate = newSampleRate;
         updateCoeffs();
     }
 
@@ -20,10 +20,10 @@ public:
         this->threshold = thresholdLinear;
     }
 
-    void setAttackRelease(float attackMs, float releaseMs)
+    void setAttackRelease(float newAttackMs, float newReleaseMs)
     {
-        this->attackMs = attackMs;
-        this->releaseMs = releaseMs;
+        this->attackMs = newAttackMs;
+        this->releaseMs = newReleaseMs;
         updateCoeffs();
     }
 
