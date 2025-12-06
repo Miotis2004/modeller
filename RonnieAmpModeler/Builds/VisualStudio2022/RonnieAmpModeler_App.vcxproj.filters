@@ -3487,6 +3487,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_processors_lv2_libs.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\include_juce_dsp.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_utils.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
