@@ -3,8 +3,9 @@
 //==============================================================================
 
 AmpModelerComponent::AmpModelerComponent()
+    : mainLayout(processor)
 {
-    setSize(800, 600);
+    setSize(900, 600);
 
     // Request mic permission where needed and open audio channels
     if (juce::RuntimePermissions::isRequired(juce::RuntimePermissions::recordAudio)
@@ -21,21 +22,11 @@ AmpModelerComponent::AmpModelerComponent()
         setAudioChannels(2, 2); // 2 inputs, 2 outputs
     }
 
-    // === UI SETUP ===
-    inputGainSlider.setRange(0.0, 2.0, 0.01);
-    inputGainSlider.setValue(1.0);
-    inputGainSlider.setSliderStyle(juce::Slider::Rotary);
-    inputGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-    addAndMakeVisible(inputGainSlider);
+    addAndMakeVisible(mainLayout);
 
-    inputGainLabel.setText("Input Gain", juce::dontSendNotification);
-    inputGainLabel.setJustificationType(juce::Justification::centred);
-    addAndMakeVisible(inputGainLabel);
-
-    inputGainSlider.onValueChange = [this]
-        {
-            engine.setInputGain((float)inputGainSlider.getValue());
-        };
+    addAndMakeVisible(settingsButton);
+    settingsButton.setButtonText("Settings");
+    settingsButton.onClick = [this] { openSettings(); };
 }
 
 AmpModelerComponent::~AmpModelerComponent()
@@ -43,47 +34,56 @@ AmpModelerComponent::~AmpModelerComponent()
     shutdownAudio();
 }
 
+void AmpModelerComponent::openSettings()
+{
+    juce::DialogWindow::LaunchOptions opt;
+    opt.dialogTitle = "Audio Settings";
+    opt.dialogBackgroundColour = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
+    opt.content.setOwned(new juce::AudioDeviceSelectorComponent(deviceManager, 0, 2, 0, 2, false, false, true, false));
+    opt.content->setSize(400, 600);
+    opt.launchAsync();
+}
+
 //==============================================================================
 
 void AmpModelerComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    engine.prepare(sampleRate, samplesPerBlockExpected);
+    processor.prepareToPlay(sampleRate, samplesPerBlockExpected);
 }
 
 void AmpModelerComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    auto* buffer = bufferToFill.buffer;
-    auto  numChannels = buffer->getNumChannels();
-    auto  numSamples = bufferToFill.numSamples;
+    juce::MidiBuffer midi; // Empty MIDI for now
 
-    // We will support up to 2 channels for now
-    const float* inputPointers[2]{ nullptr, nullptr };
-    float* outputPointers[2]{ nullptr, nullptr };
+    // Create a proxy buffer that points to the correct section of the main buffer
+    juce::AudioBuffer<float> proxyBuffer(bufferToFill.buffer->getArrayOfWritePointers(),
+                                         bufferToFill.buffer->getNumChannels(),
+                                         bufferToFill.startSample,
+                                         bufferToFill.numSamples);
 
-    for (int ch = 0; ch < numChannels && ch < 2; ++ch)
-    {
-        inputPointers[ch] = buffer->getReadPointer(ch, bufferToFill.startSample);
-        outputPointers[ch] = buffer->getWritePointer(ch, bufferToFill.startSample);
-    }
-
-    engine.process(inputPointers, outputPointers, numSamples, numChannels);
+    // Process the block through the engine
+    processor.processBlock(proxyBuffer, midi);
 }
 
 void AmpModelerComponent::releaseResources()
 {
-    // Called when the audio device stops or is restarted
+    processor.releaseResources();
 }
 
 //==============================================================================
 
 void AmpModelerComponent::paint(juce::Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    g.fillAll(juce::Colours::black);
+
+    // Header background
+    g.setColour(juce::Colours::darkred.withAlpha(0.5f));
+    g.fillRect(0, 0, getWidth(), 40);
 
     g.setColour(juce::Colours::white);
-    g.setFont(20.0f);
-    g.drawFittedText("Ronnie Amp Modeler - Test UI",
-        getLocalBounds().removeFromTop(40),
+    g.setFont(24.0f);
+    g.drawFittedText("Ronnie Amp Modeler",
+        0, 0, getWidth(), 40,
         juce::Justification::centred,
         1);
 }
@@ -91,12 +91,9 @@ void AmpModelerComponent::paint(juce::Graphics& g)
 void AmpModelerComponent::resized()
 {
     auto area = getLocalBounds();
-    auto bottom = area.removeFromBottom(200);
-    auto sliderArea = bottom.reduced(20);
+    auto topBar = area.removeFromTop(40); // Title bar
 
-    inputGainSlider.setBounds(sliderArea.removeFromLeft(150));
-    inputGainLabel.setBounds(inputGainSlider.getX(),
-        inputGainSlider.getBottom(),
-        inputGainSlider.getWidth(),
-        20);
+    settingsButton.setBounds(topBar.removeFromRight(100).reduced(5));
+
+    mainLayout.setBounds(area);
 }
