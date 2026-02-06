@@ -43,7 +43,7 @@ public:
             "Save Preset",
             "Enter a preset name:",
             juce::AlertWindow::NoIcon);
-        presetNamePrompt->addTextEditor("presetName", "", "Preset Name:");
+        presetNamePrompt->addTextEditor("presetName");
         presetNamePrompt->addButton("Save", 1, juce::KeyPress(juce::KeyPress::returnKey));
         presetNamePrompt->addButton("Cancel", 0, juce::KeyPress(juce::KeyPress::escapeKey));
         presetNamePrompt->enterModalState(true, juce::ModalCallbackFunction::create([this](int result)
@@ -104,18 +104,10 @@ private:
     {
         presetList.clear();
         presetFiles = presetManager.getPresetFiles();
-        struct PresetFileSorter
+        presetFiles.sort([](const juce::File& a, const juce::File& b)
         {
-            static int compareElements(const juce::File& a, const juce::File& b)
-            {
-                if (a.getLastModificationTime() > b.getLastModificationTime())
-                    return -1;
-                if (a.getLastModificationTime() < b.getLastModificationTime())
-                    return 1;
-                return 0;
-            }
-        };
-        presetFiles.sort(PresetFileSorter());
+            return a.getLastModificationTime() > b.getLastModificationTime();
+        });
 
         for (int i = 0; i < presetFiles.size(); ++i)
         {
