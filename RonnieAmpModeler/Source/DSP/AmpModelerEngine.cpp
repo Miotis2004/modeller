@@ -23,6 +23,12 @@ void AmpModelerEngine::prepare(double sampleRate, int samplesPerBlock)
     inputGain.prepare(spec);
     inputGain.setRampDurationSeconds(0.05);
 
+    ampGain.prepare(spec);
+    ampGain.setRampDurationSeconds(0.05);
+
+    ampMaster.prepare(spec);
+    ampMaster.setRampDurationSeconds(0.05);
+
     outputGain.prepare(spec);
     outputGain.setRampDurationSeconds(0.05);
 
@@ -65,23 +71,31 @@ void AmpModelerEngine::process(const float* const* inputChannelData, float* cons
         }
     }
 
-    // 3. Amp Model (NAM)
+    // 3. Amp Gain (drive)
+    ampGain.process(context);
+
+    // 4. Amp Model (NAM)
     namProcessor.process(context);
 
-    // 4. Cabinet Simulation
+    // 5. Amp Master
+    ampMaster.process(context);
+
+    // 6. Cabinet Simulation
     cabSim.process(context);
 
-    // 5. Post EQ
+    // 7. Post EQ
     postEq.process(context);
 
-    // 6. Output Gain
+    // 8. Output Gain
     outputGain.process(context);
 }
 
 void AmpModelerEngine::reset()
 {
     inputGain.reset();
+    ampGain.reset();
     namProcessor.reset();
+    ampMaster.reset();
     cabSim.reset();
     postEq.reset();
     outputGain.reset();
@@ -96,6 +110,16 @@ void AmpModelerEngine::setGateThreshold(float thresholdLinear)
 {
     for (int i = 0; i < 2; ++i)
         gate[i].setThreshold(thresholdLinear);
+}
+
+void AmpModelerEngine::setAmpGain(float gain)
+{
+    ampGain.setGainLinear(gain);
+}
+
+void AmpModelerEngine::setAmpMaster(float gain)
+{
+    ampMaster.setGainLinear(gain);
 }
 
 void AmpModelerEngine::setOutputGain(float gain)

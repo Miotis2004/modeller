@@ -40,6 +40,8 @@ public:
         // Note: In strict realtime code, getRawParameterValue is safe.
         engine.setInputGain(*apvts.getRawParameterValue("input_gain"));
         engine.setGateThreshold(*apvts.getRawParameterValue("gate_threshold"));
+        engine.setAmpGain(*apvts.getRawParameterValue("amp_gain"));
+        engine.setAmpMaster(*apvts.getRawParameterValue("amp_master"));
         engine.setOutputGain(*apvts.getRawParameterValue("output_gain"));
 
         // Update EQ

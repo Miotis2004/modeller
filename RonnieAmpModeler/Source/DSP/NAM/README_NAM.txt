@@ -1,7 +1,7 @@
 Ronnie Amp Modeler - NAM Integration Instructions
 ===================================================
 
-The project is currently configured with a "Mock" NAM integration to allow building and testing the UI/Signal Chain without external heavy dependencies.
+The project can build with a lightweight "Mock" NAM fallback, or with the full Neural Amp Modeler Core when you provide the dependencies locally.
 
 To enable the full Neural Amp Modeler Core:
 
@@ -11,10 +11,11 @@ To enable the full Neural Amp Modeler Core:
 2. Download `Eigen` (Linear Algebra Library):
    https://eigen.tuxfamily.org/
 
-3. Replace `Source/DSP/NAM/NamLoader.h` with the actual inclusion of NAM headers.
+3. Configure CMake with the NAM core and Eigen paths:
+   - `-DRONNIE_USE_NAM_CORE=ON`
+   - `-DNAM_CORE_PATH=/path/to/NeuralAmpModelerCore`
+   - `-DEIGEN_PATH=/path/to/eigen`
 
-4. Update `NamModelProcessor.h` to instantiate the real `nam::DSP` object instead of `nam::MockModel`.
-
-5. Update `CMakeLists.txt` to include the NAM core source files and the Eigen include path.
-
-The current `NamLoader.h` provides a structure compatible with the real loader (`nam::get_dsp`), so minimal code changes are required in `NamModelProcessor`.
+When enabled, the build will add NAM core sources, include the NAM headers, and
+enable the real `nam::get_dsp` loader. If these paths are not provided, the build
+will use the lightweight mock path so the UI and DSP chain can still compile.
