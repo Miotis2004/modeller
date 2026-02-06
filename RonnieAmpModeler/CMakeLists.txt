@@ -3,7 +3,21 @@ cmake_minimum_required(VERSION 3.15)
 project(RonnieAmpModeler VERSION 0.0.1)
 
 # Manually configure JUCE modules
-set(JUCE_MODULES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/JUCE/modules")
+set(JUCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/JUCE")
+set(JUCE_MODULES_PATH "${JUCE_DIR}/modules")
+
+# Fetch JUCE if the submodule is missing
+if (NOT EXISTS "${JUCE_MODULES_PATH}/juce_core/juce_core.cpp")
+    include(FetchContent)
+    FetchContent_Declare(
+        juce
+        GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
+        GIT_TAG 7.0.12
+    )
+    FetchContent_MakeAvailable(juce)
+    set(JUCE_DIR "${juce_SOURCE_DIR}")
+    set(JUCE_MODULES_PATH "${JUCE_DIR}/modules")
+endif()
 
 # ==============================================================================
 # HEADLESS ENGINE LIBRARY (For Verification & CI)
@@ -78,7 +92,7 @@ if (NOT DEFINED HEADLESS_ONLY)
     # We will add a target that only builds if we have the GUI deps or on Windows.
 
     if (WIN32 OR APPLE)
-        add_subdirectory(JUCE) # This brings in juce_add_gui_app
+        add_subdirectory(${JUCE_DIR} JUCE) # This brings in juce_add_gui_app
 
         juce_add_gui_app(RonnieAmpModeler
             PRODUCT_NAME "Ronnie Amp Modeler"
