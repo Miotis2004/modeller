@@ -6,11 +6,6 @@ project(RonnieAmpModeler VERSION 0.0.1)
 set(JUCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/JUCE")
 set(JUCE_MODULES_PATH "${JUCE_DIR}/modules")
 
-# Optional: Neural Amp Modeler Core integration (requires local checkout)
-option(RONNIE_USE_NAM_CORE "Enable NeuralAmpModelerCore inference" OFF)
-set(NAM_CORE_PATH "" CACHE PATH "Path to NeuralAmpModelerCore source")
-set(EIGEN_PATH "" CACHE PATH "Path to Eigen include directory")
-
 # Fetch JUCE if the submodule is missing
 if (NOT EXISTS "${JUCE_MODULES_PATH}/juce_core/juce_core.cpp")
     include(FetchContent)
