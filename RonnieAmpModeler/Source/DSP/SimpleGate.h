@@ -70,8 +70,8 @@ private:
 
     void updateCoeffs()
     {
-        attackCoeff = std::exp(-1000.0f / (attackMs * sampleRate));
-        releaseCoeff = std::exp(-1000.0f / (releaseMs * sampleRate));
+        attackCoeff = static_cast<float>(std::exp(-1000.0f / (attackMs * sampleRate)));
+        releaseCoeff = static_cast<float>(std::exp(-1000.0f / (releaseMs * sampleRate)));
     }
 };
 

@@ -34,6 +34,7 @@ public:
 
     void processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override
     {
+        juce::ignoreUnused(midiMessages);
         juce::ScopedNoDenormals noDenormals;
 
         // Update Engine Parameters from APVTS
@@ -99,9 +100,16 @@ public:
 
     int getNumPrograms() override { return 1; }
     int getCurrentProgram() override { return 0; }
-    void setCurrentProgram(int index) override {}
-    const juce::String getProgramName(int index) override { return "Default"; }
-    void changeProgramName(int index, const juce::String& newName) override {}
+    void setCurrentProgram(int index) override { juce::ignoreUnused(index); }
+    const juce::String getProgramName(int index) override
+    {
+        juce::ignoreUnused(index);
+        return "Default";
+    }
+    void changeProgramName(int index, const juce::String& newName) override
+    {
+        juce::ignoreUnused(index, newName);
+    }
 
     void getStateInformation(juce::MemoryBlock& destData) override
     {
