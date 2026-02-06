@@ -14,6 +14,10 @@ public:
         loadIrButton.setButtonText("Load IR");
         loadIrButton.onClick = [this] { loadIR(); };
 
+        addAndMakeVisible(irNameLabel);
+        irNameLabel.setJustificationType(juce::Justification::centredLeft);
+        irNameLabel.setText("No IR loaded", juce::dontSendNotification);
+
         // Output Gain
         addAndMakeVisible(outGainSlider);
         outGainSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
@@ -40,6 +44,7 @@ public:
             if (file != juce::File{})
             {
                 audioProcessor.loadCabIR(file);
+                irNameLabel.setText(file.getFileNameWithoutExtension(), juce::dontSendNotification);
             }
         });
     }
@@ -48,7 +53,9 @@ public:
     {
         auto area = getLocalBounds().reduced(10);
 
-        loadIrButton.setBounds(area.removeFromTop(30));
+        auto topRow = area.removeFromTop(30);
+        loadIrButton.setBounds(topRow.removeFromLeft(80));
+        irNameLabel.setBounds(topRow);
 
         area.removeFromTop(20);
 
@@ -71,6 +78,7 @@ private:
     RonnieAudioProcessor& audioProcessor;
 
     juce::TextButton loadIrButton;
+    juce::Label irNameLabel;
 
     juce::Slider outGainSlider;
     juce::Label outGainLabel;
