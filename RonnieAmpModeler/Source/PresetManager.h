@@ -61,6 +61,16 @@ public:
         }
     }
 
+    juce::Array<juce::File> getPresetFiles() const
+    {
+        juce::Array<juce::File> files;
+        if (presetsDirectory.exists())
+        {
+            presetsDirectory.findChildFiles(files, juce::File::findFiles, false, "*.json");
+        }
+        return files;
+    }
+
     juce::File getPresetsDirectory() const { return presetsDirectory; }
 
 private:

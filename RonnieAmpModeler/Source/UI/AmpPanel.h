@@ -16,7 +16,11 @@ public:
 
         addAndMakeVisible(mockButton);
         mockButton.setButtonText("Use Default Amp");
-        mockButton.onClick = [this] { audioProcessor.getEngine().enablePlaceholderAmp(); };
+        mockButton.onClick = [this]
+        {
+            audioProcessor.getEngine().enablePlaceholderAmp();
+            modelNameLabel.setText("Default Model", juce::dontSendNotification);
+        };
 
         // Amp Gain
         addAndMakeVisible(ampGainSlider);
