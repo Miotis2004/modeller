@@ -84,8 +84,13 @@ public:
     }
 
     //==============================================================================
-    juce::AudioProcessorEditor* createEditor() override { return nullptr; }
+#if defined(JUCE_MODULE_AVAILABLE_juce_gui_basics)
+    juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; }
+#else
+    juce::AudioProcessorEditor* createEditor() override { return nullptr; }
+    bool hasEditor() const override { return false; }
+#endif
 
     const juce::String getName() const override { return "Ronnie Amp Modeler"; }
     bool acceptsMidi() const override { return false; }

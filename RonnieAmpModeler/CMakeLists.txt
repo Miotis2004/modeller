@@ -98,6 +98,7 @@ if (NOT DEFINED HEADLESS_ONLY)
         Source/Main.cpp
         Source/MainComponent.cpp
         Source/MainComponent.h
+        Source/RonnieAudioProcessor.cpp
         Source/RonnieAudioProcessor.h
         Source/DSP/AmpModelerEngine.cpp
         Source/DSP/AmpModelerEngine.h
