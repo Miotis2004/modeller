@@ -21,16 +21,16 @@ void AmpModelerEngine::prepare(double sampleRate, int samplesPerBlock)
     spec.numChannels = 2;
 
     inputGain.prepare(spec);
-    inputGain.setRampDurationSeconds(0.05);
+    inputGain.setRampDurationSeconds(0.05f);
 
     ampGain.prepare(spec);
-    ampGain.setRampDurationSeconds(0.05);
+    ampGain.setRampDurationSeconds(0.05f);
 
     ampMaster.prepare(spec);
-    ampMaster.setRampDurationSeconds(0.05);
+    ampMaster.setRampDurationSeconds(0.05f);
 
     outputGain.prepare(spec);
-    outputGain.setRampDurationSeconds(0.05);
+    outputGain.setRampDurationSeconds(0.05f);
 
     for (int i = 0; i < 2; ++i)
         gate[i].prepare(sampleRate);

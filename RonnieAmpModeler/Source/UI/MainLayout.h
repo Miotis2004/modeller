@@ -106,7 +106,7 @@ private:
         presetFiles = presetManager.getPresetFiles();
         struct PresetFileSorter
         {
-            static int compareElements(const juce::File& first, const juce::File& second)
+            int compareElements(const juce::File& first, const juce::File& second) const
             {
                 if (first.getLastModificationTime() > second.getLastModificationTime())
                     return -1;
@@ -116,7 +116,8 @@ private:
             }
         };
 
-        presetFiles.sort(PresetFileSorter{});
+        PresetFileSorter sorter;
+        presetFiles.sort(sorter);
 
         for (int i = 0; i < presetFiles.size(); ++i)
         {

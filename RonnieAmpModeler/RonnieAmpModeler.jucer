@@ -4,6 +4,30 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="evADjx" name="RonnieAmpModeler">
     <GROUP id="{46CDE286-B1C9-A91E-093F-3662E41425A2}" name="Source">
+      <FILE id="HyYk5U" name="AmpModelerEngine.cpp" compile="1" resource="0"
+            file="Source/DSP/AmpModelerEngine.cpp"/>
+      <FILE id="v3SxAx" name="AmpModelerEngine.h" compile="0" resource="0"
+            file="Source/DSP/AmpModelerEngine.h"/>
+      <FILE id="u1p8t5" name="NamLoader.h" compile="0" resource="0"
+            file="Source/DSP/NAM/NamLoader.h"/>
+      <FILE id="xD8uJm" name="NamModelProcessor.h" compile="0" resource="0"
+            file="Source/DSP/NamModelProcessor.h"/>
+      <FILE id="j2n1qG" name="SimpleGate.h" compile="0" resource="0"
+            file="Source/DSP/SimpleGate.h"/>
+      <FILE id="K1H8m5" name="MainLayout.h" compile="0" resource="0"
+            file="Source/UI/MainLayout.h"/>
+      <FILE id="OTvs1C" name="InputPanel.h" compile="0" resource="0"
+            file="Source/UI/InputPanel.h"/>
+      <FILE id="c6PSzo" name="AmpPanel.h" compile="0" resource="0"
+            file="Source/UI/AmpPanel.h"/>
+      <FILE id="U3xJxj" name="CabOutputPanel.h" compile="0" resource="0"
+            file="Source/UI/CabOutputPanel.h"/>
+      <FILE id="l0FEYQ" name="PresetManager.h" compile="0" resource="0"
+            file="Source/PresetManager.h"/>
+      <FILE id="oQ1uDu" name="RonnieAudioProcessor.cpp" compile="1" resource="0"
+            file="Source/RonnieAudioProcessor.cpp"/>
+      <FILE id="r2b3vH" name="RonnieAudioProcessor.h" compile="0" resource="0"
+            file="Source/RonnieAudioProcessor.h"/>
       <FILE id="n6OR6i" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="hTNpAn" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="R70nZm" name="MainComponent.cpp" compile="1" resource="0"
