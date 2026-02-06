@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <juce_dsp/juce_dsp.h>
 #include "NamModelProcessor.h"
 #include "SimpleGate.h"
 
@@ -20,6 +21,8 @@ public:
     // Parameters
     void setInputGain(float gain);
     void setGateThreshold(float thresholdLinear);
+    void setAmpGain(float gain);
+    void setAmpMaster(float gain);
     void setOutputGain(float gain);
 
     // EQ Parameters
@@ -45,17 +48,21 @@ private:
     SimpleGate gate[2]; // Stereo gate
 
     // 3. Amp Model (NAM)
+    juce::dsp::Gain<float> ampGain;
     NamModelProcessor namProcessor;
 
-    // 4. Cabinet Simulation
+    // 4. Amp Master
+    juce::dsp::Gain<float> ampMaster;
+
+    // 5. Cabinet Simulation
     juce::dsp::Convolution cabSim;
 
-    // 5. Post EQ
+    // 6. Post EQ
     // Low Shelf, Peaking (Mid), High Shelf
     using Filter = juce::dsp::IIR::Filter<float>;
     juce::dsp::ProcessorChain<Filter, Filter, Filter> postEq;
 
-    // 6. Output Gain
+    // 7. Output Gain
     juce::dsp::Gain<float> outputGain;
 
     // Internal processing spec

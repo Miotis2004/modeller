@@ -28,35 +28,46 @@ public:
         savePresetButton.setButtonText("Save Preset");
         savePresetButton.onClick = [this] { savePreset(); };
 
+        addAndMakeVisible(presetList);
+
         addAndMakeVisible(loadPresetButton);
         loadPresetButton.setButtonText("Load Preset");
         loadPresetButton.onClick = [this] { loadPreset(); };
+
+        refreshPresetList();
     }
 
     void savePreset()
     {
-        // Simple alert window to get name (blocking for simplicity in this context)
-        // In real app use async.
-        // We'll just default to "MyPreset" + timestamp for this proof of concept
-        juce::String name = "Preset_" + juce::Time::getCurrentTime().formatted("%Y%m%d-%H%M%S");
-        presetManager.savePreset(name);
+        presetNamePrompt = std::make_unique<juce::AlertWindow>(
+            "Save Preset",
+            "Enter a preset name:",
+            juce::AlertWindow::NoIcon);
+        presetNamePrompt->addTextEditor("presetName", "", "Preset Name:");
+        presetNamePrompt->addButton("Save", 1, juce::KeyPress(juce::KeyPress::returnKey));
+        presetNamePrompt->addButton("Cancel", 0, juce::KeyPress(juce::KeyPress::escapeKey));
+        presetNamePrompt->enterModalState(true, juce::ModalCallbackFunction::create([this](int result)
+        {
+            if (result == 1 && presetNamePrompt != nullptr)
+            {
+                auto name = presetNamePrompt->getTextEditor("presetName")->getText().trim();
+                if (name.isEmpty())
+                    name = "Preset_" + juce::Time::getCurrentTime().formatted("%Y%m%d-%H%M%S");
+
+                presetManager.savePreset(name);
+                refreshPresetList();
+            }
+            presetNamePrompt.reset();
+        }), true);
     }
 
     void loadPreset()
     {
-        chooser = std::make_unique<juce::FileChooser>("Load Preset...",
-                                                      presetManager.getPresetsDirectory(),
-                                                      "*.json");
-        auto flags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
-
-        chooser->launchAsync(flags, [this](const juce::FileChooser& fc)
+        auto index = presetList.getSelectedItemIndex();
+        if (index >= 0 && index < presetFiles.size())
         {
-            auto file = fc.getResult();
-            if (file != juce::File{})
-            {
-                presetManager.loadPreset(file);
-            }
-        });
+            presetManager.loadPreset(presetFiles.getReference(index));
+        }
     }
 
     void resized() override
@@ -66,6 +77,7 @@ public:
         auto topBar = area.removeFromTop(30);
         savePresetButton.setBounds(topBar.removeFromRight(100).reduced(2));
         loadPresetButton.setBounds(topBar.removeFromRight(100).reduced(2));
+        presetList.setBounds(topBar.removeFromRight(220).reduced(2));
 
         int width = area.getWidth() / 3;
 
@@ -80,11 +92,50 @@ private:
 
     juce::TextButton savePresetButton;
     juce::TextButton loadPresetButton;
-    std::unique_ptr<juce::FileChooser> chooser;
+    juce::ComboBox presetList;
+    juce::Array<juce::File> presetFiles;
+    std::unique_ptr<juce::AlertWindow> presetNamePrompt;
 
     InputPanel inputPanel;
     AmpPanel ampPanel;
     CabOutputPanel cabPanel;
+
+    void refreshPresetList()
+    {
+        presetList.clear();
+        presetFiles = presetManager.getPresetFiles();
+        struct PresetFileSorter
+        {
+            static int compareElements(const juce::File& a, const juce::File& b)
+            {
+                if (a.getLastModificationTime() > b.getLastModificationTime())
+                    return -1;
+                if (a.getLastModificationTime() < b.getLastModificationTime())
+                    return 1;
+                return 0;
+            }
+        };
+        presetFiles.sort(PresetFileSorter());
+
+        for (int i = 0; i < presetFiles.size(); ++i)
+        {
+            const auto& file = presetFiles.getReference(i);
+            auto label = file.getFileNameWithoutExtension() + " (" +
+                         file.getLastModificationTime().formatted("%Y-%m-%d %H:%M") + ")";
+            presetList.addItem(label, i + 1);
+        }
+
+        if (presetFiles.isEmpty())
+        {
+            presetList.setText("No presets", juce::dontSendNotification);
+            presetList.setEnabled(false);
+        }
+        else
+        {
+            presetList.setSelectedItemIndex(0, juce::dontSendNotification);
+            presetList.setEnabled(true);
+        }
+    }
 };
 
 }

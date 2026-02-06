@@ -40,6 +40,8 @@ public:
         // Note: In strict realtime code, getRawParameterValue is safe.
         engine.setInputGain(*apvts.getRawParameterValue("input_gain"));
         engine.setGateThreshold(*apvts.getRawParameterValue("gate_threshold"));
+        engine.setAmpGain(*apvts.getRawParameterValue("amp_gain"));
+        engine.setAmpMaster(*apvts.getRawParameterValue("amp_master"));
         engine.setOutputGain(*apvts.getRawParameterValue("output_gain"));
 
         // Update EQ
@@ -82,8 +84,13 @@ public:
     }
 
     //==============================================================================
-    juce::AudioProcessorEditor* createEditor() override { return nullptr; }
+#if defined(JUCE_MODULE_AVAILABLE_juce_gui_basics)
+    juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override { return true; }
+#else
+    juce::AudioProcessorEditor* createEditor() override { return nullptr; }
+    bool hasEditor() const override { return false; }
+#endif
 
     const juce::String getName() const override { return "Ronnie Amp Modeler"; }
     bool acceptsMidi() const override { return false; }

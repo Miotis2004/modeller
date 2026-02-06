@@ -1,5 +1,8 @@
 #pragma once
 
+#if defined(RONNIE_USE_NAM_CORE) && RONNIE_USE_NAM_CORE
+#include <nam/nam.h>
+#else
 #include <JuceHeader.h>
 #include <vector>
 #include <string>
@@ -94,3 +97,4 @@ namespace nam
         return std::make_unique<MockModel>();
     }
 }
+#endif
