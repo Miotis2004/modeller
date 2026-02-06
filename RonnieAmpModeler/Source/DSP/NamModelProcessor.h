@@ -11,10 +11,12 @@ class NamModelProcessor
 public:
     NamModelProcessor()
     {
+#if !(defined(RONNIE_USE_NAM_CORE) && RONNIE_USE_NAM_CORE)
         // Load default model (bypass/linear)
         auto m = std::make_unique<nam::MockModel>();
         m->setGain(1.0f);
         model = std::move(m);
+#endif
     }
 
     void prepare(const juce::dsp::ProcessSpec& spec)
@@ -42,7 +44,11 @@ public:
     void loadPlaceholderAmp()
     {
         const juce::ScopedLock sl(lock);
+#if defined(RONNIE_USE_NAM_CORE) && RONNIE_USE_NAM_CORE
+        model.reset();
+#else
         model = std::make_unique<nam::MockModel>();
+#endif
     }
 
     template <typename ProcessContext>

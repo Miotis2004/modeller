@@ -45,6 +45,31 @@ target_include_directories(RonnieAmpEngine PRIVATE
     ${JUCE_MODULES_PATH}
 )
 
+if (RONNIE_USE_NAM_CORE)
+    if (NOT EXISTS "${NAM_CORE_PATH}")
+        message(FATAL_ERROR "RONNIE_USE_NAM_CORE is ON but NAM_CORE_PATH is not set or invalid.")
+    endif()
+    if (NOT EXISTS "${EIGEN_PATH}")
+        message(FATAL_ERROR "RONNIE_USE_NAM_CORE is ON but EIGEN_PATH is not set or invalid.")
+    endif()
+
+    file(GLOB_RECURSE NAM_CORE_SOURCES
+        "${NAM_CORE_PATH}/src/*.cpp"
+        "${NAM_CORE_PATH}/src/*.c"
+    )
+    if (NAM_CORE_SOURCES)
+        target_sources(RonnieAmpEngine PRIVATE ${NAM_CORE_SOURCES})
+    endif()
+
+    target_include_directories(RonnieAmpEngine PRIVATE
+        "${NAM_CORE_PATH}/include"
+        "${NAM_CORE_PATH}/src"
+        "${EIGEN_PATH}"
+    )
+
+    target_compile_definitions(RonnieAmpEngine PRIVATE RONNIE_USE_NAM_CORE=1)
+endif()
+
 target_compile_definitions(RonnieAmpEngine PRIVATE
     JUCE_APP_VERSION=0.0.1
     JUCE_APP_VERSION_HEX=0x0001
@@ -114,5 +139,15 @@ if (NOT DEFINED HEADLESS_ONLY)
             juce::juce_gui_extra
             juce::juce_dsp
         )
+
+        if (RONNIE_USE_NAM_CORE)
+            target_sources(RonnieAmpModeler PRIVATE ${NAM_CORE_SOURCES})
+            target_include_directories(RonnieAmpModeler PRIVATE
+                "${NAM_CORE_PATH}/include"
+                "${NAM_CORE_PATH}/src"
+                "${EIGEN_PATH}"
+            )
+            target_compile_definitions(RonnieAmpModeler PRIVATE RONNIE_USE_NAM_CORE=1)
+        endif()
     endif()
 endif()
